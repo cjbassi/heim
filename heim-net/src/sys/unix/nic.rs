@@ -1,9 +1,11 @@
-use heim_common::prelude::*;
+use std::pin::Pin;
 
 use crate::{Address, AddressFamily};
 use nix::ifaddrs;
 use nix::net::if_::InterfaceFlags;
 use nix::sys::socket;
+
+use heim_common::prelude::*;
 
 #[derive(Debug)]
 pub struct Nic(ifaddrs::InterfaceAddress);
@@ -63,22 +65,34 @@ impl Nic {
     }
 }
 
-pub fn nic() -> impl Stream<Item = Nic, Error = Error> {
-    future::lazy(|| {
+pub fn nic() -> impl Stream<Item = Result<Nic>> {
+    future::lazy(|_| {
         // `nix::ifaddrs` structs are not safe to send between threads,
         // so collecting them in a once
         let iter = ifaddrs::getifaddrs()?;
         let interfaces = iter.collect::<Vec<_>>();
-        Ok(stream::iter_ok(interfaces))
+
+        Ok(interfaces)
+    })
+    .map_ok(|interfaces| {
+        let stream = stream::iter(interfaces).map(Ok);
+
+        // TODO: https://github.com/rust-lang-nursery/futures-rs/issues/1444
+        Box::pin(stream) as Pin<Box<dyn Stream<Item = _> + Send>>
+    })
+    .unwrap_or_else(|e| {
+        Box::pin(stream::once(future::err(e)))
     })
     .flatten_stream()
-    .filter_map(|addr| {
+    .try_filter_map(|addr: ifaddrs::InterfaceAddress| {
         // Skipping unsupported address families
-        if addr.address.is_some() {
+        let result = if addr.address.is_some() {
             Some(Nic(addr))
         } else {
             None
-        }
+        };
+
+        future::ok(result)
     })
 }
 

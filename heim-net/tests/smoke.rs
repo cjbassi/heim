@@ -1,26 +1,21 @@
 use heim_net as net;
-use heim_runtime::{self as runtime, SyncRuntime};
 
-#[test]
-fn smoke_counters() {
-    let mut rt = runtime::new().unwrap();
-    let counters = rt.block_collect(net::io_counters());
 
-    assert_ne!(0, counters.count());
+#[runtime::test]
+fn smoke_io_counters() {
+    let mut counters = net::io_counters();
+    while let Some(counter) = counters.next().await {
+        let counter = counter.unwrap();
+
+    }
 }
 
-//#[test]
-//fn smoke_connections() {
-//    let mut rt = runtime::new().unwrap();
-//    let conns = rt.block_collect(net::connections(net::ConnectionKind::all()));
-//
-//    assert_ne!(0, conns.count());
-//}
-
-#[test]
+#[runtime::test]
 fn smoke_nic() {
-    let mut rt = runtime::new().unwrap();
-    let counters = rt.block_collect(net::nic());
+    let mut nic = net::nic();
+    while let Some(iface) = nic.next().await {
+        let iface = iface.unwrap();
 
-    assert_ne!(0, counters.count());
+    }
 }
+

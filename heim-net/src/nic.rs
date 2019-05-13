@@ -102,6 +102,6 @@ impl fmt::Debug for Nic {
 /// Returns stream which yields [Network Interface Cards].
 ///
 /// [Network Interface Cards]: struct.Nic.html
-pub fn nic() -> impl Stream<Item = Nic, Error = Error> {
-    sys::nic().map(Into::into)
+pub fn nic() -> impl Stream<Item = Result<Nic>> {
+    sys::nic().map_ok(Into::into)
 }
