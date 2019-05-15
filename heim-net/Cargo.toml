@@ -1,6 +1,6 @@
 [package]
 name = "heim-net"
-version = "0.0.1"
+version = "0.0.3"
 authors = ["svartalf <self@svartalf.info>"]
 edition = "2018"
 description = "Cross-platform network information"
@@ -19,7 +19,6 @@ heim-common = { version = "0.0.2", path = "../heim-common" }
 cfg-if = "0.1.7"
 try_from = "0.3.2"
 bitflags = "1.0.4"
-log = "0.4.6"
 
 [dev-dependencies]
 runtime = "0.3.0-alpha.3"
@@ -31,10 +30,6 @@ nix = "0.13.0"
 
 [features]
 doc = []
-
-[[bench]]
-name = "net"
-harness = false
 
 [package.metadata.docs.rs]
 features = ["doc"]

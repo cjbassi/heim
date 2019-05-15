@@ -44,22 +44,27 @@ impl Nic {
         self.as_ref().family()
     }
 
+    /// Returns primary NIC address.
     pub fn address(&self) -> Address {
         self.as_ref().address()
     }
 
+    /// Returns netmask address if available.
     pub fn netmask(&self) -> Option<Address> {
         self.as_ref().netmask()
     }
 
+    /// Returns broadcast address if available.
     pub fn broadcast(&self) -> Option<Address> {
         self.as_ref().broadcast()
     }
 
+    /// Returns destination address if available.
     pub fn destination(&self) -> Option<Address> {
         self.as_ref().destination()
     }
 
+    /// Returns `bool` indicating whether interface is up and running.
     pub fn is_up(&self) -> bool {
         self.as_ref().is_up()
     }
