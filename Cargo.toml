@@ -12,3 +12,6 @@ members = [
 #    "heim-virt",
 #    "heim-winservice",
 ]
+
+[patch.crates-io]
+futures-preview = { git = "https://github.com/rust-lang-nursery/futures-rs", rev = "9e801418191191b1b18b2c33303792df1d880390" }

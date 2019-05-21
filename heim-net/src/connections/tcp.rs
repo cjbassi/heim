@@ -3,8 +3,6 @@ use std::fmt;
 
 use crate::sys;
 
-use heim_common::prelude::*;
-
 /// TCP connection states
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Copy, Clone, Hash)]
 pub enum TcpState {

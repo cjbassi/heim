@@ -5,7 +5,7 @@ use heim_net as net;
 
 #[runtime::main]
 async fn main() -> Result<()> {
-    let mut conns = net::connections(net::ConnectionKind::TCPV4);
+    let mut conns = net::connections(net::ConnectionKind::all());
     while let Some(conn) = conns.next().await {
         dbg!(conn?);
     }

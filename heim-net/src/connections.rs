@@ -1,8 +1,11 @@
 use heim_common::prelude::*;
 
 mod tcp;
+mod tcp6;
 
 pub use self::tcp::*;
+pub use self::tcp6::*;
+
 use crate::sys;
 
 bitflags::bitflags! {
@@ -15,6 +18,7 @@ bitflags::bitflags! {
 #[derive(Debug)]
 pub enum Connection {
     Tcp(TcpConnection),
+    Tcp6(Tcp6Connection),
 }
 
 pub fn connections(kind: ConnectionKind) -> impl Stream<Item = Result<Connection>> {
