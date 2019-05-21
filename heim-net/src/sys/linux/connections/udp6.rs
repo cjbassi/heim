@@ -13,11 +13,11 @@ pub struct Udp6Connection {
 }
 
 impl Udp6Connection {
-    pub fn local_address(&self) -> &net::SocketAddrV6 {
+    pub fn source(&self) -> &net::SocketAddrV6 {
         &self.laddr
     }
 
-    pub fn remote_address(&self) -> &net::SocketAddrV6 {
+    pub fn destination(&self) -> &net::SocketAddrV6 {
         &self.raddr
     }
 }

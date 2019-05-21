@@ -53,12 +53,12 @@ impl TcpConnection {
         self.as_ref().state()
     }
 
-    pub fn local_address(&self) -> &SocketAddrV4 {
-        self.as_ref().local_address()
+    pub fn source(&self) -> &SocketAddrV4 {
+        self.as_ref().source()
     }
 
-    pub fn remote_address(&self) -> &SocketAddrV4 {
-        self.as_ref().remote_address()
+    pub fn destination(&self) -> &SocketAddrV4 {
+        self.as_ref().destination()
     }
 }
 
@@ -66,8 +66,8 @@ impl fmt::Debug for TcpConnection {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("TcpConnection")
             .field("state", &self.state())
-            .field("local_address", &self.local_address())
-            .field("remote_address", &self.remote_address())
+            .field("source", &self.source())
+            .field("destination", &self.destination())
             .finish()
     }
 }

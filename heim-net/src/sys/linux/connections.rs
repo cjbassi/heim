@@ -7,11 +7,14 @@ mod tcp;
 mod tcp6;
 mod udp;
 mod udp6;
+mod unix;
 
 pub use self::tcp::TcpConnection;
 pub use self::tcp6::Tcp6Connection;
 pub use self::udp::UdpConnection;
 pub use self::udp6::Udp6Connection;
+pub use self::unix::UnixConnection;
+
 
 pub fn connections(kind: ConnectionKind) -> impl Stream<Item = Result<Connection>> {
     let mut streams: Vec<stream::BoxStream<'static, Result<Connection>>> = Vec::new();
@@ -37,6 +40,12 @@ pub fn connections(kind: ConnectionKind) -> impl Stream<Item = Result<Connection
     if kind.contains(ConnectionKind::UDPV6) {
         let stream = self::udp6::udp6_connections()
             .map_ok(|conn| Connection::Udp6(conn.into()));
+        streams.push(Box::pin(stream));
+    }
+
+    if kind.contains(ConnectionKind::UNIX) {
+        let stream = self::unix::unix_connections()
+            .map_ok(|conn| Connection::Unix(conn.into()));
         streams.push(Box::pin(stream));
     }
 

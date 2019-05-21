@@ -19,11 +19,11 @@ impl Tcp6Connection {
         self.state
     }
 
-    pub fn local_address(&self) -> &net::SocketAddrV6 {
+    pub fn source(&self) -> &net::SocketAddrV6 {
         &self.laddr
     }
 
-    pub fn remote_address(&self) -> &net::SocketAddrV6 {
+    pub fn destination(&self) -> &net::SocketAddrV6 {
         &self.raddr
     }
 }

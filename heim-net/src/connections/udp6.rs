@@ -7,20 +7,20 @@ use crate::sys;
 pub struct Udp6Connection(sys::Udp6Connection);
 
 impl Udp6Connection {
-    pub fn local_address(&self) -> &SocketAddrV6 {
-        self.as_ref().local_address()
+    pub fn source(&self) -> &SocketAddrV6 {
+        self.as_ref().source()
     }
 
-    pub fn remote_address(&self) -> &SocketAddrV6 {
-        self.as_ref().remote_address()
+    pub fn destination(&self) -> &SocketAddrV6 {
+        self.as_ref().destination()
     }
 }
 
 impl fmt::Debug for Udp6Connection {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("Udp6Connection")
-            .field("local_address", &self.local_address())
-            .field("remote_address", &self.remote_address())
+            .field("source", &self.source())
+            .field("destination", &self.destination())
             .finish()
     }
 }
