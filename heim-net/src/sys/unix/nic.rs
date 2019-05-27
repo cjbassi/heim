@@ -1,11 +1,13 @@
 use std::pin::Pin;
 
-use crate::{Address, AddressFamily};
 use nix::ifaddrs;
 use nix::net::if_::InterfaceFlags;
 use nix::sys::socket;
+use macaddr::MacAddr;
 
 use heim_common::prelude::*;
+
+use crate::Address;
 
 #[derive(Debug)]
 pub struct Nic(ifaddrs::InterfaceAddress);
@@ -13,15 +15,6 @@ pub struct Nic(ifaddrs::InterfaceAddress);
 impl Nic {
     pub fn name(&self) -> &str {
         self.0.interface_name.as_str()
-    }
-
-    pub fn family(&self) -> AddressFamily {
-        self.0
-            .address
-            .as_ref()
-            .expect("NIC stream should exclude entries without address")
-            .family()
-            .into()
     }
 
     pub fn address(&self) -> Address {
@@ -69,6 +62,7 @@ pub fn nic() -> impl Stream<Item = Result<Nic>> {
     future::lazy(|_| {
         // `nix::ifaddrs` structs are not safe to send between threads,
         // so collecting them in a once
+        // TODO: Can we Pin them maybe?
         let iter = ifaddrs::getifaddrs()?;
         let interfaces = iter.collect::<Vec<_>>();
 
@@ -96,27 +90,13 @@ pub fn nic() -> impl Stream<Item = Result<Nic>> {
     })
 }
 
-impl From<socket::AddressFamily> for AddressFamily {
-    fn from(f: socket::AddressFamily) -> Self {
-        use nix::sys::socket::AddressFamily::*;
-        match f {
-            Unix => AddressFamily::Unix,
-            Inet => AddressFamily::Inet,
-            Inet6 => AddressFamily::Inet6,
-            Packet => AddressFamily::Packet,
-            other => unimplemented!("Unknown address family: {:?}", other),
-        }
-    }
-}
-
 impl From<&socket::SockAddr> for Address {
     fn from(s: &socket::SockAddr) -> Self {
         use nix::sys::socket::SockAddr::*;
 
         match *s {
             Inet(addr) => Address::Inet(addr.to_std()),
-            // TODO: Convert contents into Link addr
-            Link(..) => Address::Link,
+            Link(addr) => Address::Link(MacAddr::from(addr.addr())),
             other => unimplemented!("Unknown sockaddr: {:?}", other),
         }
     }

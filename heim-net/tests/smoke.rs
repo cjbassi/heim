@@ -10,6 +10,15 @@ async fn smoke_io_counters() {
     while let Some(counter) = counters.next().await {
         let counter = counter.unwrap();
 
+        let _ = counter.interface();
+        let _ = counter.bytes_sent();
+        let _ = counter.bytes_recv();
+        let _ = counter.packets_sent();
+        let _ = counter.packets_recv();
+        let _ = counter.errors_sent();
+        let _ = counter.errors_recv();
+        let _ = counter.drop_recv();
+        let _ = counter.drop_sent();
     }
 }
 
@@ -19,6 +28,13 @@ async fn smoke_nic() {
     while let Some(iface) = nic.next().await {
         let iface = iface.unwrap();
 
+        let _ = iface.name();
+        let _ = iface.address();
+        let _ = iface.netmask();
+        let _ = iface.destination();
+        let _ = iface.is_up();
+        let _ = iface.is_loopback();
+        let _ = iface.is_multicast();
     }
 }
 
