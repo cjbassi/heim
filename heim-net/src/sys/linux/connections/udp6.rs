@@ -2,7 +2,7 @@ use std::net;
 use std::str::FromStr;
 
 use heim_common::prelude::*;
-use heim_common::utils::parse::ParseIterator;
+use heim_common::utils::iter::*;
 
 use super::inet::parse_addr;
 

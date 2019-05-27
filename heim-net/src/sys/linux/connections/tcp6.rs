@@ -2,7 +2,7 @@ use std::net;
 use std::str::FromStr;
 
 use heim_common::prelude::*;
-use heim_common::utils::parse::ParseIterator;
+use heim_common::utils::iter::*;
 
 use crate::connections::TcpState;
 use super::inet::parse_addr;
@@ -35,7 +35,7 @@ impl FromStr for Tcp6Connection {
         let mut parts = line.split_whitespace().skip(1);
         let laddr = parse_addr(parts.try_next()?)?;
         let raddr = parse_addr(parts.try_next()?)?;
-        let state: TcpState = parts.try_from_next()?;
+        let state: TcpState = parts.try_parse_next()?;
 
         Ok(Self{
             state,
