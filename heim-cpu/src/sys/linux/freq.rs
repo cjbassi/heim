@@ -108,7 +108,6 @@ pub fn frequencies() -> impl Stream<Item = Result<CpuFrequency>> {
         })
 }
 
-#[allow(clippy::redundant_closure)]
 fn read_freq(path: PathBuf) -> impl Future<Output = Result<Frequency>> {
     utils::fs::read_to_string(path)
         .and_then(|value| future::ready(value.trim_end().parse::<u64>().map_err(Error::from)))
@@ -116,12 +115,10 @@ fn read_freq(path: PathBuf) -> impl Future<Output = Result<Frequency>> {
 }
 
 fn current_freq(path: &Path) -> impl Future<Output = Result<Frequency>> {
-    let one = read_freq(path.join("scaling_cur_freq")).into_future().fuse();
-    let two = read_freq(path.join("cpuinfo_cur_freq")).into_future().fuse();
+    let one = read_freq(path.join("scaling_cur_freq"));
+    let two = read_freq(path.join("cpuinfo_cur_freq"));
 
-    future::try_select(one, two)
-        .map_ok(|res| res.factor_first().0)
-        .map_err(|res| res.factor_first().0)
+    one.or_else(|_| two)
 }
 
 fn max_freq(path: &Path) -> impl Future<Output = Result<Option<Frequency>>> {
