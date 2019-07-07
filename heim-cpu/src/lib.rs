@@ -1,10 +1,6 @@
 //! CPU information.
 //!
-//! This crate is a part of [heim](https://crates.io/crates/heim) project,
-//! consider using it instead.
-
-#![allow(stable_features)]
-#![feature(futures_api)]
+//! This module is enabled with the `cpu` feature flag (enabled by default).
 
 pub mod os;
 mod sys;
