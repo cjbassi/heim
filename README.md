@@ -52,9 +52,9 @@ between futures versions `0.1` and `0.3/std::future::Future`.\
 It is not a project goal to provide any kind of information about how to
 combine `heim` with `actix`, `hyper`, `tide`, or any other Rust crate.
 
-At the moment `heim` is not dependant on any async runtime, but it will in the future
-and it will most likely be a [runtime](https://crates.io/crates/runtime) crate.
-Users may want to consider that fact during development.
+At the moment, `heim` is not dependant on any async runtime, but it may need to be in the future
+and if so it will most likely be a runtime compatible with the [runtime](https://crates.io/crates/runtime) crate.
+Users may want to consider this fact during development. See [#75](https://github.com/heim-rs/heim/issues/75) for more info.
 
 ## Platform support
 
